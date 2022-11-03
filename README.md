@@ -43,7 +43,8 @@ kubectl get pod -n home-assistant
 The output should be similar to:
 
 ```
-NAMESPACE       NAME                                        READY   STATUS    RESTARTS      AGE
+NAME                              READY   STATUS    RESTARTS   AGE
+home-assistant-7c55cc95ff-f94cz   1/1     Running   0          44s
 ```
 
 ## Usage

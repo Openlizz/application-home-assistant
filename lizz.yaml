@@ -1,0 +1,50 @@
+name: home-assistant
+values:
+  applicationDependencies:
+    - name: isNginxInstalled
+      repository: github.com/openlizz/application-nginx
+    - name: isCertManagerInstalled
+      repository: github.com/openlizz/application-cert-manager
+    - name: isClusterIssuerInstalled
+      repository: github.com/openlizz/application-cluster-issuer
+    - name: isDomainInstalled
+      repository: github.com/openlizz/application-domain-name
+  clusterValues:
+    - name: nginxName
+      template: '{{ range .Applications }}{{ if eq .Configuration.Repository "github.com/openlizz/application-nginx" }}{{.Name}}{{ end }}{{ end }}'
+    - name: nginxNamespace
+      template: '{{ range .Applications }}{{ if eq .Configuration.Repository "github.com/openlizz/application-nginx" }}{{.Configuration.Namespace}}{{ end }}{{ end }}'
+    - name: certManagerName
+      template: '{{ range .Applications }}{{ if eq .Configuration.Repository "github.com/openlizz/application-cert-manager" }}{{.Name}}{{ end }}{{ end }}'
+    - name: certManagerNamespace
+      template: '{{ range .Applications }}{{ if eq .Configuration.Repository "github.com/openlizz/application-cert-manager" }}{{.Configuration.Namespace}}{{ end }}{{ end }}'
+    - name: clusterIssuerName
+      template: '{{ range .Applications }}{{ if eq .Configuration.Repository "github.com/openlizz/application-cluster-issuer" }}{{.Configuration.Name}}{{ end }}{{ end }}'
+    - name: clusterIssuerNamespace
+      template: '{{ range .Applications }}{{ if eq .Configuration.Repository "github.com/openlizz/application-cluster-issuer" }}{{.Configuration.Namespace}}{{ end }}{{ end }}'
+    - name: domainName
+      template: '{{ range .Applications }}{{ if eq .Configuration.Repository "github.com/openlizz/application-domain-name" }}{{.Configuration.Name}}{{ end }}{{ end }}'
+    - name: domainNamespace
+      template: '{{ range .Applications }}{{ if eq .Configuration.Repository "github.com/openlizz/application-domain-name" }}{{.Configuration.Namespace}}{{ end }}{{ end }}'
+  applicationValues:
+    - name: domain
+      repository: github.com/openlizz/application-domain-name
+      path: configmap.yaml
+      keys: ["data", "value"]
+dependsOn:
+  {{- if index . "isNginxInstalled" }}
+  - name: {{index . "nginxName"}}
+    namespace: {{index . "nginxNamespace"}}
+  {{- end }}
+  {{- if index . "isCertManagerInstalled" }}
+  - name: {{index . "certManagerName"}}
+    namespace: {{index . "certManagerNamespace"}}
+  {{- end }}
+  {{- if index . "isClusterIssuerInstalled" }}
+  - name: {{index . "clusterIssuerName"}}
+    namespace: {{index . "clusterIssuerNamespace"}}
+  {{- end }}
+  {{- if index . "isDomainInstalled" }}
+  - name: {{index . "domainName"}}
+    namespace: {{index . "domainNamespace"}}
+  {{- end }}
